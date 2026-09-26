@@ -9,7 +9,6 @@ academic_bp = Blueprint("academic", __name__)
 # ─── Academic Years ───────────────────────────────────────────────────────────
 
 @academic_bp.route("/academic-years", methods=["GET"])
-@jwt_required()
 def list_academic_years():
     years = AcademicYear.query.order_by(AcademicYear.year_name).all()
     return jsonify([y.to_dict() for y in years]), 200
@@ -54,7 +53,6 @@ def delete_academic_year(yid):
 # ─── Years of Study ───────────────────────────────────────────────────────────
 
 @academic_bp.route("/years-of-study", methods=["GET"])
-@jwt_required()
 def list_years_of_study():
     years = YearOfStudy.query.order_by(YearOfStudy.year_number).all()
     return jsonify([y.to_dict() for y in years]), 200
@@ -99,7 +97,6 @@ def delete_year_of_study(yid):
 # ─── Sections ─────────────────────────────────────────────────────────────────
 
 @academic_bp.route("/sections", methods=["GET"])
-@jwt_required()
 def list_sections():
     secs = Section.query.order_by(Section.name).all()
     return jsonify([s.to_dict() for s in secs]), 200

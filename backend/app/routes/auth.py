@@ -52,10 +52,10 @@ def register():
     student = Student(
         user_id=user.id,
         register_number=data["register_number"].strip(),
-        department_id=data.get("department_id"),
-        academic_year_id=data.get("academic_year_id"),
-        year_of_study_id=data.get("year_of_study_id"),
-        section_id=data.get("section_id"),
+        department_id=int(data["department_id"]) if data.get("department_id") else None,
+        academic_year_id=int(data["academic_year_id"]) if data.get("academic_year_id") else None,
+        year_of_study_id=int(data["year_of_study_id"]) if data.get("year_of_study_id") else None,
+        section_id=int(data["section_id"]) if data.get("section_id") else None,
     )
     db.session.add(student)
     db.session.commit()

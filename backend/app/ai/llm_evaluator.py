@@ -90,6 +90,8 @@ def evaluate_rubric(
         raw = _call_openai(prompt)
     elif provider == "anthropic":
         raw = _call_anthropic(prompt)
+    elif provider == "gemini":
+        raw = _call_gemini(prompt)
     else:
         raw = None  # Fall through to mock
 
@@ -108,7 +110,7 @@ def _call_openai(prompt: str) -> str | None:
     try:
         from openai import OpenAI
         client = OpenAI(api_key=current_app.config.get("OPENAI_API_KEY"))
-        model = current_app.config.get("LLM_MODEL", "gpt-4o")
+        model = current_app.config.get("LLM_MODEL", "gpt-4o-mini")
         response = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -122,12 +124,27 @@ def _call_openai(prompt: str) -> str | None:
         return None
 
 
+def _call_gemini(prompt: str) -> str | None:
+    try:
+        import google.generativeai as genai
+        genai.configure(api_key=current_app.config.get("GEMINI_API_KEY"))
+        model = genai.GenerativeModel(
+            "gemini-1.5-flash",
+            generation_config={"response_mime_type": "application/json"}
+        )
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        logger.error(f"Gemini call failed: {e}")
+        return None
+
+
 def _call_anthropic(prompt: str) -> str | None:
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=current_app.config.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
-            model="claude-3-haiku-20240307",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=1000,
             messages=[{"role": "user", "content": prompt}],
         )

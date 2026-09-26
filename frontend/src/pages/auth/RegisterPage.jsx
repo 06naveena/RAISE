@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authService, departmentService, academicYearService, yearOfStudyService, sectionService } from '../../services';
+import { useAuth } from '../../context/AuthContext';
+import { departmentService, academicYearService, yearOfStudyService, sectionService } from '../../services';
 import { GraduationCap, User, Mail, Lock, Hash, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [departments, setDepartments] = useState([]);
@@ -24,11 +26,11 @@ export default function RegisterPage() {
       yearOfStudyService.list(),
       sectionService.list(),
     ]).then(([d, ay, y, s]) => {
-      setDepartments(d.data);
-      setAcademicYears(ay.data);
-      setYears(y.data);
-      setSections(s.data);
-    }).catch(() => {});
+      setDepartments(d.data || []);
+      setAcademicYears(ay.data || []);
+      setYears(y.data || []);
+      setSections(s.data || []);
+    }).catch(() => { });
   }, []);
 
   const handleSubmit = async (e) => {
@@ -36,8 +38,7 @@ export default function RegisterPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await authService.register(form);
-      localStorage.setItem('raise_token', res.data.access_token);
+      await register(form);
       toast.success('Registration successful!');
       navigate('/student/dashboard');
     } catch (err) {

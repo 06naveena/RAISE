@@ -17,6 +17,7 @@ class Config:
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "mock")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
     ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-    LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o")
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+    LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
 
     TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")

@@ -8,7 +8,6 @@ dept_bp = Blueprint("departments", __name__)
 
 
 @dept_bp.route("", methods=["GET"])
-@jwt_required()
 def list_departments():
     depts = Department.query.order_by(Department.name).all()
     return jsonify([d.to_dict() for d in depts]), 200

@@ -59,3 +59,4 @@ backend/uploads/*
 .DS_Store
 Thumbs.db
 *.log
+*.exe
